@@ -69,11 +69,9 @@ def ensemble_predict_batch(
     batch_size: int = 16
 ) -> List[Dict[str,int]]:
     """
-    批量加载并预测文件夹中所有图像，分批次处理以节省内存。
-    返回列表，每项包含 filename, substrate_pred, biotic_pred。
+    batch processing
     """
     results = []
-    # 将整个路径列表按 batch_size 切分
     # for i in range(0, len(image_paths), batch_size):
     for i in tqdm(range(0, len(image_paths), batch_size), desc="Batch predicting", unit="batch"):
         batch_paths = image_paths[i:i+batch_size]
@@ -91,14 +89,14 @@ def ensemble_predict_batch(
         with torch.no_grad():
             feats = model.encode_image(batch_tensor)
 
-        # 计算相似度
+        # cal similarity
         def compute_sims(feats, protos):
             return {cid: (feats @ feat.T).squeeze(1) for cid, feat in protos.items()}
 
         sub_img_sims  = compute_sims(feats, sub_protos)
         sub_txt_sims  = compute_sims(feats, sub_text_protos)
 
-        # 对每张图融合得分并决策
+        # fuse sim for final prediction
         B = feats.size(0)
         for idx in range(B):
             # substrate
