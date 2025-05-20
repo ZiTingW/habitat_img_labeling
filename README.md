@@ -4,6 +4,8 @@
 
 To enable quick zero-shot habitat labeling using CLIP with prompt and visual guidance, you can manually provide a few example images for each class. These should be organized under the `substrate_protos` folder, with each subdirectory named by the class index.
 
+![](https://github.com/ZiTingW/habitat_img_labeling/blob/main/habitat_labeling.png)
+
 ### Directory structure example:
         
 Manually provide some img examples to the path (substrate_protos), such as 
